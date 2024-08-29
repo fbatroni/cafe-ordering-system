@@ -1,5 +1,5 @@
 #!/bin/bash
 
 pushd backend
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --host 0.0.0.0 --reload --port 8000
 popd

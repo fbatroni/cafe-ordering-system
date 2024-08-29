@@ -9,7 +9,7 @@ class Role(BaseModel):
 
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserRole(BaseModel):
@@ -19,7 +19,7 @@ class UserRole(BaseModel):
 
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserProfile(BaseModel):
@@ -30,7 +30,7 @@ class UserProfile(BaseModel):
 
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserAddress(BaseModel):
@@ -47,7 +47,7 @@ class UserAddress(BaseModel):
 
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserBase(BaseModel):
@@ -59,6 +59,9 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
 
 class UserResponse(UserBase):
     user_id: int
@@ -70,4 +73,12 @@ class UserResponse(UserBase):
 
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+# Token Schemas
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
