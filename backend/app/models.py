@@ -69,3 +69,68 @@ class UserAddress(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     
     user = relationship("User", back_populates="addresses")
+
+
+
+
+
+
+
+# CREATE TABLE inventory (
+#     inventory_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+#     item_id INT,
+#     quantity_available INT,
+#     reorder_level INT,
+#     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+#     FOREIGN KEY (item_id) REFERENCES menu_items(item_id) ON DELETE CASCADE
+# );
+
+class inventory(Base):
+    __tablename__ = "inventory"
+
+    inventory_id = Column(Integer, primary_key=True,index=True)
+    item_id =  Column(Integer, ForeignKey("menu_item.item_id"), nullable=False)
+    quantity_available = Column(Integer)
+    reorder_level = Column(Integer)
+    last_updated = Column(DateTime, default=datetime.utcnow)
+    menu_item = relationship("item", back_populates="inventory")
+    
+
+# CREATE TABLE locations (
+#     location_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+#     location_name VARCHAR(100),
+#     address_line1 VARCHAR(255),
+#     address_line2 VARCHAR(255),
+#     city VARCHAR(100),
+#     state VARCHAR(100),
+#     postal_code VARCHAR(20),
+#     phone_number VARCHAR(20),
+#     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+# );
+
+class location(Base):
+    __tablename__ = "locations"
+
+    location_id = Column(Integer, primary_key=True, index=True)
+    location_name = Column(String(100))
+    address_line1 = Column(String(255))
+    address_line2 = Column(String(255))
+    city = Column(String(100))
+    state = Column(String(100))
+    postal_code = Column(String(20))
+    phone_number = Column(String(20))
+    create_at = Column(DateTime, default=datetime.utcnow)
+
+
+# CREATE TABLE discount_types (
+#     discount_type_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+#     discount_type_name VARCHAR(50) UNIQUE
+# );
+
+
+class discount_type(Base):
+    __tablename__ = "discount_types"
+    
+    discount_type_id = Column(Integer, primary_key=True,nullable=True)
+    discount_type_name = Column(String(100), unique=True)
+
