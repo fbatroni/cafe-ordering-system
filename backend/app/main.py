@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers.v1.users import router as users_router
+from app.routers.v1.users import users_router
+from app.routers.v1.admin import admin_router
 from fastapi.openapi.utils import get_openapi
 
 # Custom OpenAPI configuration to include security schemes
@@ -36,6 +37,7 @@ def custom_openapi():
 
 app = FastAPI()
 app.include_router(users_router)
+app.include_router(admin_router)
 
 app.openapi = custom_openapi
 

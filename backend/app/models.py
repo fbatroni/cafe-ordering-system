@@ -4,6 +4,7 @@ from datetime import datetime
 from app.database import Base
 
 
+
 class User(Base):
     __tablename__ = "users"
 
@@ -69,3 +70,4 @@ class UserAddress(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     
     user = relationship("User", back_populates="addresses")
+
