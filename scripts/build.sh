@@ -1,4 +1,4 @@
-pushd backend
+pushd python-backend
 
 rm -rf venv
 python -m venv venv

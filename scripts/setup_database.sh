@@ -9,14 +9,17 @@ SQL_FILE="cafe_ordering_system.sql" # Name of the SQL file containing the schema
 DB_EXISTS=$(psql -U "$DB_USER" -lqt | cut -d \| -f 1 | grep -w "$DB_NAME")
 
 if [ "$DB_EXISTS" ]; then
-    echo "Database '$DB_NAME' already exists. Skipping creation."
-else
-    # Create the database
-    echo "Creating database '$DB_NAME'..."
-    # -- Create the main database
-    # --CREATE DATABASE cafe_ordering_system;
-    createdb -U "$DB_USER" "$DB_NAME"
+    echo "Database '$DB_NAME' already exists. Forcing disconnection of active connections..."
+    psql -U "$DB_USER" -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$DB_NAME' AND pid <> pg_backend_pid();" 
+
+    echo "Dropping the database..."
+    dropdb -U "$DB_USER" "$DB_NAME"
+    echo "Database '$DB_NAME' dropped."
 fi
+
+# Create the database
+echo "Creating database '$DB_NAME'..."
+createdb -U "$DB_USER" "$DB_NAME"
 
 # Execute the SQL script
 echo "Loading schema and data into '$DB_NAME'..."

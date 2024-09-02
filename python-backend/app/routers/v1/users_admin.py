@@ -6,10 +6,11 @@ from app.core import security
 from app.dependencies import get_db
 from typing import List
 
-admin_router = APIRouter(prefix="/v1/admin", tags=["Admin"])
+users_admin_router = APIRouter(prefix="/v1/admin", tags=["Admin"])
 
-@admin_router.get("/users", response_model=List[schemas.UserResponse])
-def get_all_users(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user_with_role("Admin"))):
+@users_admin_router.get("/users", response_model=List[schemas.UserResponse])
+def get_all_users(db: Session = Depends(get_db),
+                  current_user: models.User = Depends(get_current_user_with_role("Admin"))):
     """
     Retrieve a list of all users.
 
@@ -26,8 +27,10 @@ def get_all_users(db: Session = Depends(get_db), current_user: models.User = Dep
         raise HTTPException(status_code=404, detail="No users found")
     return users
 
-@admin_router.get("/users/{user_id}", response_model=schemas.UserResponse)
-def get_user(user_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user_with_role("Admin"))):
+@users_admin_router.get("/users/{user_id}", response_model=schemas.UserResponse)
+def get_user(user_id: int,
+             db: Session = Depends(get_db),
+             current_user: models.User = Depends(get_current_user_with_role("Admin"))):
     """
     Retrieve a single user's details.
 
@@ -44,7 +47,7 @@ def get_user(user_id: int, db: Session = Depends(get_db), current_user: models.U
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
-@admin_router.delete("/users/{user_id}", response_model=schemas.UserResponse)
+@users_admin_router.delete("/users/{user_id}", response_model=schemas.UserResponse)
 def delete_user(user_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user_with_role("Admin"))):
     """
     Delete a user from the system.
