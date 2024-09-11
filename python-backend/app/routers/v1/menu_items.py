@@ -6,7 +6,7 @@ from app.dependencies import get_db
 from typing import List
 from datetime import datetime
 
-menu_items_router = APIRouter(prefix="/v1/menu", tags=["MenuItems"])
+menu_items_router = APIRouter(prefix="/v1/menu-items", tags=["MenuItems"])
 
 # Get all menu items
 @menu_items_router.get("/", response_model=List[schemas.MenuItem])
@@ -21,7 +21,7 @@ def read_menu_item(item_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Menu item not found")
     return db_menu_item
 
-menu_items_admin_router = APIRouter(prefix="/v1/admin/menu", tags=["Admin"])
+menu_items_admin_router = APIRouter(prefix="/v1/admin/menu-items", tags=["Admin"])
 
 # Create a new menu item
 @menu_items_admin_router.post("/", response_model=schemas.MenuItem)

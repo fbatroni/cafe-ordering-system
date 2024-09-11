@@ -58,7 +58,7 @@ app.include_router(locations_admin_router)
 app.openapi = custom_openapi
 
 # Allow React frontend to communicate with FastAPI backend
-origins = ["http://www.cafeorders.com"]
+origins = ["http://www.cafeorders.com", "http://localhost:3000"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

@@ -1,0 +1,19 @@
+/* src/components/MenuCategory.css */
+.menu-category {
+  margin-top: 50px;
+  padding: 30px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.category-name {
+  font-size: 2rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.menu-items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
