@@ -7,6 +7,7 @@ class OrderStatus(Base):
 
     order_status_id = Column(Integer, primary_key=True, index=True)
     order_status_name = Column(String, unique=True, index=True)
+    orders = relationship("Order", back_populates="order_status")
 
 class Order(Base):
     __tablename__ = "orders"
