@@ -2,34 +2,47 @@ import React, { useEffect, useState } from "react";
 import NavBar from "./components/NavBar";
 import MenuCategory from "./components/MenuCategory";
 import "./App.css";
+import LocationList from "./components/LocationList";
+import {
+  fetchCategories,
+  fetchMenuItems,
+  fetchMenuItemsByLocation,
+} from "./services/apiService";
 
 const App = () => {
   const [categories, setCategories] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedLocationId, setSelectedLocationId] = useState(null);
+
+  const handleSelectLocation = (locationId) => {
+    setSelectedLocationId(locationId);
+  };
 
   useEffect(() => {
-    // Fetch categories
-    fetch("http://localhost:8000/v1/categories")
-      .then((response) => response.json())
-      .then((data) => {
-        setCategories(data);
-        setSelectedCategory(data[0].category_id); // Automatically select the first category as default
-      });
+    const loadCategories = async () => {
+      const data = await fetchCategories();
+      setCategories(data);
+      setSelectedCategory(data[0].category_id); // Automatically select the first category as default
+    };
+    loadCategories();
 
-    // Fetch menu items
-    fetch("http://localhost:8000/v1/menu-items")
-      .then((response) => response.json())
-      .then((data) => {
-        const updatedMenuItems = data.map((item) => {
-          return {
-            ...item,
-            image_url: item.image_url.replace("https://example.com/", ""), // Replace the base URL
-          };
-        });
-        setMenuItems(updatedMenuItems); // Set the updated menu items
-      });
-  }, []);
+    const loadMenuItems = async () => {
+      let data;
+
+      if (selectedLocationId) {
+        // Fetch filtered menu items if locationId is provided
+        data = await fetchMenuItemsByLocation(selectedLocationId);
+      } else {
+        // Fetch all menu items if no locationId is provided
+        data = await fetchMenuItems();
+      }
+
+      setMenuItems(data);
+    };
+
+    loadMenuItems();
+  }, [selectedLocationId]);
 
   const handleCategoryClick = (categoryId) => {
     setSelectedCategory(categoryId); // Update the selected category
@@ -55,7 +68,7 @@ const App = () => {
           </button>
         ))}
       </div>
-
+      <LocationList onSelectLocation={handleSelectLocation} />
       <div className="menu-container">
         {filteredMenuItems.length > 0 ? (
           <MenuCategory

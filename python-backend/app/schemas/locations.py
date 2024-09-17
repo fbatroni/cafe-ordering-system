@@ -23,7 +23,7 @@ class LocationUpdate(LocationBase):
 
 class Location(LocationBase):
     location_id: int = Field(..., description="The unique ID of the location")
-    created_at: Optional[str] = None  # Include the created_at timestamp in the response
+    #created_at: Optional[str] = None  # Include the created_at timestamp in the response
 
     class Config:
         orm_mode = True

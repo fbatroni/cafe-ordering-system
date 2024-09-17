@@ -13,6 +13,12 @@
   border-bottom: 2px solid #e0e0e0;
 }
 
+.locations-nav {
+  display: flex;
+  background-color: #f8f8f8;
+  border-bottom: 2px solid #e0e0e0;
+}
+
 .category-button {
   background: none;
   border: none;
