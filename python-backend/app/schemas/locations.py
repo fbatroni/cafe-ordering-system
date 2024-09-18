@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field,  constr
+from pydantic import BaseModel, Field,  constr, condecimal
 from typing import Optional, List
 from datetime import datetime
 from datetime import time
@@ -32,6 +32,21 @@ class LocationMenuItemBase(BaseModel):
     location_id: int
     item_id: int
     is_available: Optional[bool] = True
+
+class LocationMenuItemFlat(BaseModel):
+    location_id: Optional[int]
+    location_name: str
+    item_id: int
+    item_name: constr(min_length=1, max_length=100)
+    description: Optional[str] = None
+    price: condecimal(max_digits=10, decimal_places=2)
+    image_url: Optional[str] = None
+    is_available: Optional[bool] = True
+    category_name: str
+    category_description: Optional[str] = None
+    category_id: Optional[int]
+    class Config:
+        orm_mode = True
 
 class LocationMenuItemCreate(LocationMenuItemBase):
     pass

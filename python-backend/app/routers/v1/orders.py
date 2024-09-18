@@ -6,6 +6,7 @@ from app.core import security
 from app.dependencies import get_db
 from typing import List
 
+
 orders_router = APIRouter(prefix="/v1/orders", tags=["Orders"])
 
 # User can create an order
@@ -16,6 +17,36 @@ def create_order(order: schemas.OrderCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_order)
     return db_order
+
+@orders_router.put("/{order_id}")
+async def submit_order(order_id: int, user_id: int, db: Session = Depends(get_db)):
+    # Retrieve the order
+    order = db.query(models.Order).filter(models.Order.order_id == order_id, models.Order.user_id == user_id).first()
+
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    # Check if the order is already submitted (i.e., already processed)
+    if order.order_status_id != 1:  # Assuming 1 is the "Pending" status
+        raise HTTPException(status_code=400, detail="Order already processed or submitted")
+
+    # Retrieve the items in the order
+    order_items = db.query(models.OrderItem).filter(models.OrderItem.order_id == order_id).all()
+
+    if not order_items:
+        raise HTTPException(status_code=400, detail="No items found in the order")
+
+    # Calculate the total price
+    total_price = sum(item.price * item.quantity for item in order_items)
+
+    # Update the order's total_price and status
+    order.total_price = total_price
+    order.order_status_id = 2  # Assuming 2 represents a "Submitted" status
+
+    # Commit the changes to the database
+    db.commit()
+    return {"message": "Order submitted successfully", "total_price": total_price}
+
 
 # User can get their own orders
 @orders_router.get("/", response_model=List[schemas.Order])

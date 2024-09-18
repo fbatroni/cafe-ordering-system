@@ -2,9 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { fetchLocations } from "../services/apiService";
 
-const LocationList = ({ onSelectLocation }) => {
+const LocationList = ({ selectedLocationId, onSelectLocation }) => {
   const [locations, setLocations] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState(1);
 
   useEffect(() => {
     const loadLocations = async () => {
@@ -17,13 +16,21 @@ const LocationList = ({ onSelectLocation }) => {
   return (
     <div>
       <div className="locations-nav">
+        <button
+          className={`category-button ${
+            selectedLocationId === null ? "active" : ""
+          }`}
+          onClick={() => onSelectLocation(null)}
+        >
+          All
+        </button>
         {locations.map((location) => (
           <button
             key={location.location_id}
             className={`category-button ${
-              selectedLocation === location.location_id ? "active" : ""
+              selectedLocationId === location.location_id ? "active" : ""
             }`}
-            onClick={() => setSelectedLocation(location.location_id)}
+            onClick={() => onSelectLocation(location.location_id)}
           >
             {location.location_name}
           </button>

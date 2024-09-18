@@ -31,9 +31,36 @@ def read_location(location_id: int, db: Session = Depends(get_db)):
     return location
 
 # Get all menu items available at a specific location
-@locations_router.get("/{location_id}/menu-items", response_model=List[schemas.LocationMenuItem])
+@locations_router.get("/{location_id}/menu-items", response_model=List[schemas.LocationMenuItemFlat])
 def read_location_menu_items(location_id: int, db: Session = Depends(get_db)):
-    return db.query(models.LocationMenuItem).filter(models.LocationMenuItem.location_id == location_id).all()
+    results = (
+        db.query(models.MenuItem, models.Category, models.LocationMenuItem, models.Location)
+        .join(models.LocationMenuItem, models.MenuItem.item_id == models.LocationMenuItem.item_id)
+        .join(models.Category, models.MenuItem.category_id == models.Category.category_id)
+        .join(models.Location, models.Location.location_id == models.LocationMenuItem.location_id)
+        .filter(models.LocationMenuItem.location_id == location_id)
+        .all()
+    )
+
+    return [
+        schemas.LocationMenuItemFlat(
+            location_id=location.location_id,
+            location_name=location.location_name,
+            item_id=item.item_id,
+            item_name=item.item_name,
+            description=item.description,
+            price=item.price,
+            image_url=item.image_url,
+            is_available=location_menu_item.is_available,
+            category_name=category.category_name,
+            category_description=category.description,
+            category_id=category.category_id
+        )
+        for item, category, location_menu_item, location in results
+    ]
+
+
+
 
 # Get the availability of a specific menu item at a specific location
 @locations_router.get("/{location_id}/menu-items/{item_id}", response_model=schemas.LocationMenuItem)

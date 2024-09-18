@@ -23,7 +23,8 @@ export const fetchMenuItemsByLocation = async (locationId) => {
     if (!response.ok) {
       throw new Error("Failed to fetch menu items");
     }
-    return await response.json();
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(error);
     return [];
@@ -32,16 +33,19 @@ export const fetchMenuItemsByLocation = async (locationId) => {
 
 // Fetch menu items
 export const fetchMenuItems = async () => {
-  const response = await fetch(`${API_BASE_URL}/v1/menu-items`);
-  const data = await response.json();
-  const updatedMenuItems = data.map((item) => {
-    return {
-      ...item,
-      image_url: item.image_url.replace("https://example.com/", ""), // Replace the base URL
-    };
-  });
-  return updatedMenuItems;
+  try {
+    const response = await fetch(`${API_BASE_URL}/v1/menu-items`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch menu items");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 };
+
 
 export const fetchCategories = async () => {
   try {

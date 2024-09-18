@@ -12,7 +12,7 @@ import {
 const App = () => {
   const [categories, setCategories] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(1); // Automatically select the first category as default
   const [selectedLocationId, setSelectedLocationId] = useState(null);
 
   const handleSelectLocation = (locationId) => {
@@ -23,7 +23,7 @@ const App = () => {
     const loadCategories = async () => {
       const data = await fetchCategories();
       setCategories(data);
-      setSelectedCategory(data[0].category_id); // Automatically select the first category as default
+      //setSelectedCategory(data[0].category_id);
     };
     loadCategories();
 
@@ -36,6 +36,7 @@ const App = () => {
       } else {
         // Fetch all menu items if no locationId is provided
         data = await fetchMenuItems();
+        console.log("all data:: ", data);
       }
 
       setMenuItems(data);
@@ -48,8 +49,11 @@ const App = () => {
     setSelectedCategory(categoryId); // Update the selected category
   };
 
-  const filteredMenuItems = menuItems.filter(
-    (item) => item.category_id === selectedCategory
+  const filteredMenuItems = menuItems.filter((item) =>
+    selectedLocationId
+      ? item.category_id === selectedCategory &&
+        item.location_id === selectedLocationId
+      : item.category_id === selectedCategory
   );
 
   return (
@@ -68,7 +72,10 @@ const App = () => {
           </button>
         ))}
       </div>
-      <LocationList onSelectLocation={handleSelectLocation} />
+      <LocationList
+        selectedLocationId={selectedLocationId}
+        onSelectLocation={handleSelectLocation}
+      />
       <div className="menu-container">
         {filteredMenuItems.length > 0 ? (
           <MenuCategory

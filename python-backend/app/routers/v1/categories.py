@@ -9,7 +9,7 @@ categories_router = APIRouter(prefix="/v1/categories", tags=["Categories"])
 
 # Get all categories
 @categories_router.get("/", response_model=List[schemas.Category])
-def read_categories(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def read_categories(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return db.query(models.Category).offset(skip).limit(limit).all()
 
 # Get a specific category by ID

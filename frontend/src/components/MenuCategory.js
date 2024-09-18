@@ -9,7 +9,7 @@ const MenuCategory = ({ categoryName, items }) => {
       <h2 className="category-name">{categoryName}</h2>
       <div className="menu-items">
         {items.map((item) => (
-          <MenuItem key={item.id} item={item} />
+          <MenuItem key={item.id} item={item} location={item.location_name} />
         ))}
       </div>
     </section>
